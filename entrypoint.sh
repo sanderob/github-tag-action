@@ -171,9 +171,12 @@ printf "History:\n---\n%s\n---\n" "$log"
 if [ -z "$tagPrefix" ]
 then
   current_tag=${tag}
+  current_pre_tag=${pre_tag}
 else
   current_tag="$(echo ${tag}| sed "s/${tagPrefix}//g")"
+  current_pre_tag="$(echo ${pre_tag}| sed "s/${tagPrefix}//g")"
 fi
+
 case "$log" in
     *$major_string_token* ) new=${tagPrefix}$(semver -i major "${current_tag}"); part="major";;
     *$minor_string_token* ) new=${tagPrefix}$(semver -i minor "${current_tag}"); part="minor";;
@@ -216,10 +219,10 @@ then
     # already a pre-release available, bump it
     if [[ "$pre_tag" =~ $new ]] && [[ "$pre_tag" =~ $suffix ]]
     then
-        new=${tagPrefix}$(semver -i prerelease "${pre_tag}" --preid "${suffix}")
+        new=${tagPrefix}$(semver -i prerelease "${current_pre_tag}" --preid "${suffix}")
         echo -e "Bumping ${suffix} pre-tag ${pre_tag}. New pre-tag ${new}"
     else
-        new="${new}-${suffix}"
+        new="${new}-${suffix}.0"
         echo -e "Setting ${suffix} pre-tag ${pre_tag} - With pre-tag ${new}"
     fi
     part="pre-$part"
