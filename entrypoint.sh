@@ -125,12 +125,12 @@ pre_tag=$(tail -n 1 <<< "$matching_pre_tag_refs")
 # if there are none, start tags at initial version
 # or if "initial_version" is not amongst the versions
 tag_without_prefix=$(echo ${tag}| sed "s/${tagPrefix}//g")
-tags_above_initial_tag=$(semver -r ">$initial_version" "$tag")
+tags_above_initial_tag=$(semver -r ">$initial_version" "$tag_without_prefix")
 
 if [ -z "$tag" ] || [ -z "$tags_above_initial_tag" ]
 then
     tag="$tagPrefix$initial_version"
-    if [ -z "$pre_tag" ] && $pre_release
+    if ([ -z "$pre_tag" ] && $pre_release) || [ -z "$tags_above_initial_tag" ]
     then
         pre_tag="$tagPrefix$initial_version"
     fi
