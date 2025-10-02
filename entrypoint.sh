@@ -252,6 +252,8 @@ fi
 if [ -n "$tag_message" ]
 then
     echo "EVENT: creating local tag $new with message: $tag_message"
+    git config --global user.name "github-actions"
+    git config --global user.email "github-actions[bot]@users.noreply.github.com"
     git tag -a "$new" -m "$tag_message" || exit 1
 else
     echo "EVENT: creating local tag $new"
